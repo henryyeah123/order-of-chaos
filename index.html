@@ -8,6 +8,9 @@
   body { font-family: Georgia, serif; max-width: 600px; margin: 40px auto; padding: 0 16px; line-height: 1.5; }
   .layer { display: none; margin-top: 40px; }
   input, button { font-size: 16px; padding: 4px 8px; }
+  body { overflow-x: hidden; }
+  #layer4 { position: fixed; top: 40%; left: 0; right: 0; text-align: center; margin: 0; }
+  #layer4 h2 { font-size: 72px; margin: 0; }
 </style>
 </head>
 <body>
@@ -59,10 +62,27 @@
       note.textContent = "Correct.";
       const next = document.getElementById("layer" + (n + 1));
       next.style.display = "block";
-      next.scrollIntoView({ behavior: "smooth" });
+      if (n === 3) {
+        chaos();
+      } else {
+        next.scrollIntoView({ behavior: "smooth" });
+      }
     } else {
       note.textContent = "Try again.";
     }
+  }
+
+  // Throw every piece of the page in a random direction.
+  function chaos() {
+    const pieces = document.querySelectorAll("h1, p, h2, li, form");
+    pieces.forEach((piece) => {
+      if (piece.closest("#layer4")) return;
+      const x = (Math.random() - 0.5) * window.innerWidth;
+      const y = (Math.random() - 0.5) * window.innerHeight;
+      const turn = (Math.random() - 0.5) * 720;
+      piece.style.transition = "transform 3s ease-out";
+      piece.style.transform = "translate(" + x + "px, " + y + "px) rotate(" + turn + "deg)";
+    });
   }
 
   document.getElementById("form1").addEventListener("submit", (event) => {
