@@ -51,29 +51,17 @@
 </div>
 
 <script>
-  // The answers for each part. Add more spellings if you want.
+  // The answers for parts 2 and 3. Add more spellings if you want.
+  // Part 1 is checked by isScrambledHenry() below instead.
   const answers = {
-    1: ["henry", "henry ye"],
     2: ["-0", "negative zero", "negative 0", "minus zero", "minus 0"],
     3: ["chaos", "chaos star", "chaos symbol", "symbol of chaos", "star of chaos", "arrows of chaos"]
   };
 
-  function check(n) {
-    // Lowercase the guess and turn a typed minus sign (−) into a plain hyphen (-).
-    const guess = document.getElementById("answer" + n).value.trim().toLowerCase().replace("−", "-");
-    const note = document.getElementById("note" + n);
-    if (answers[n].includes(guess)) {
-      note.textContent = "Correct.";
-      const next = document.getElementById("layer" + (n + 1));
-      next.style.display = "block";
-      if (n === 3) {
-        chaos();
-      } else {
-        next.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      note.textContent = "Try again.";
-    }
+  // True if the guess uses exactly the letters of "henry" in a different order, like "yrneh".
+  function isScrambledHenry(guess) {
+    const sorted = guess.split("").sort().join("");
+    return sorted === "ehnry" && guess !== "henry";
   }
 
   // Throw every piece of the page in a random direction.
@@ -87,6 +75,29 @@
       piece.style.transition = "transform 3s ease-out";
       piece.style.transform = "translate(" + x + "px, " + y + "px) rotate(" + turn + "deg)";
     });
+  }
+
+  function check(n) {
+    // Lowercase the guess and turn a typed minus sign (−) into a plain hyphen (-).
+    const guess = document.getElementById("answer" + n).value.trim().toLowerCase().replace("−", "-");
+    const note = document.getElementById("note" + n);
+    if (n === 1 && guess === "henry") {
+      note.textContent = "Not like that.";
+      return;
+    }
+    const right = n === 1 ? isScrambledHenry(guess) : answers[n].includes(guess);
+    if (right) {
+      note.textContent = "Correct.";
+      const next = document.getElementById("layer" + (n + 1));
+      next.style.display = "block";
+      if (n === 3) {
+        chaos();
+      } else {
+        next.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      note.textContent = "Try again.";
+    }
   }
 
   document.getElementById("form1").addEventListener("submit", (event) => {
