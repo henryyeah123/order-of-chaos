@@ -6,9 +6,9 @@
 <title>Order of Chaos</title>
 <style>
   body { font-family: Georgia, serif; max-width: 600px; margin: 40px auto; padding: 0 16px; line-height: 1.5; }
+  html, body { overflow-x: hidden; }
   .layer { display: none; margin-top: 40px; }
-  input, button { font-size: 16px; padding: 4px 8px; }
-  body { overflow-x: hidden; }
+  input, button { font-size: 16px; padding: 4px 8px; margin-top: 6px; }
   #layer4 { position: fixed; top: 40%; left: 0; right: 0; text-align: center; margin: 0; }
   #layer4 h2 { font-size: 72px; margin: 0; }
 </style>
@@ -17,29 +17,31 @@
 
 <h1>Order of Chaos</h1>
 <p>Henry, Zac, Cameron</p>
-<p>Solve each part, then type your answer to unlock the next one.</p>
+<p>This puzzle has three parts. Solve each one, type your answer in the box, and press Enter to unlock the next part.</p>
+<p>You will need Excel or Google Sheets. Every file you download is your own copy, so nothing you change affects anyone else.</p>
 
 <div class="layer" id="layer1">
   <h2>1.</h2>
-  <p>Download this spreadsheet and sort it until something appears.</p>
+  <p>Each row of this spreadsheet is one strip of a photo, and the rows have been shuffled.</p>
+  <p>Open it, click the arrow at the top of a column, and choose Sort Smallest to Largest. Try different columns. Only one puts the photo back in order. Remember everything you see.</p>
   <p><a href="Face-Portrait_26-10_Scrambled.xlsx" download="portrait.xlsx">portrait.xlsx</a></p>
-  <form id="form1"><input id="answer1"> <button>Enter</button></form>
+  <form id="form1"><label for="answer1">Whose face is it? Type their first name.</label><br><input id="answer1"> <button>Enter</button></form>
   <p id="note1"></p>
 </div>
 
 <div class="layer" id="layer2">
   <h2>2.</h2>
-  <p>Open this graph and change the function.</p>
-  <p><a href="https://www.desmos.com/calculator/h23hpfxeri" target="_blank" rel="noopener">graph</a></p>
-  <form id="form2"><input id="answer2"> <button>Enter</button></form>
+  <p>Look at the coefficients of the sine and cosine terms. Consider what happens when you decrease their values, and adjust them until you get "the opposite of nothing."</p>
+  <p><a href="https://www.desmos.com/calculator/h23hpfxeri" target="_blank" rel="noopener">Open the graph</a> (opens in a new tab, come back here when you are done)</p>
+  <form id="form2"><label for="answer2">What does the graph show?</label><br><input id="answer2"> <button>Enter</button></form>
   <p id="note2"></p>
 </div>
 
 <div class="layer" id="layer3">
   <h2>3.</h2>
-  <p>Some of these cells are 0. Some are -0.</p>
+  <p>Some of these cells are 0. Some are -0. A new design appears only under certain conditions. Format a new condition, starting from A1, and color what is less than nothing.</p>
   <p><a href="Inter_project.2.xlsx" download="spiral.xlsx">spiral.xlsx</a></p>
-  <form id="form3"><input id="answer3"> <button>Enter</button></form>
+  <form id="form3"><label for="answer3">What does the symbol stand for? Type one word.</label><br><input id="answer3"> <button>Enter</button></form>
   <p id="note3"></p>
 </div>
 
@@ -51,12 +53,13 @@
   // The answers for each part. Add more spellings if you want.
   const answers = {
     1: ["henry"],
-    2: ["-0", "negative zero"],
+    2: ["-0", "negative zero", "negative 0", "minus zero", "minus 0"],
     3: ["chaos", "chaos star"]
   };
 
   function check(n) {
-    const guess = document.getElementById("answer" + n).value.trim().toLowerCase();
+    // Lowercase the guess and turn a typed minus sign (−) into a plain hyphen (-).
+    const guess = document.getElementById("answer" + n).value.trim().toLowerCase().replace("−", "-");
     const note = document.getElementById("note" + n);
     if (answers[n].includes(guess)) {
       note.textContent = "Correct.";
