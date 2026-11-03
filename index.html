@@ -5,8 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Order of Chaos</title>
 <style>
-  body { font-family: Georgia, serif; max-width: 600px; margin: 40px auto; padding: 0 16px; line-height: 1.5; }
-  html, body { overflow-x: hidden; }
+  body { font-family: Georgia, serif; max-width: 600px; margin: 40px auto; padding: 0 16px; line-height: 1.5; text-align: center; }
+  html, body { overflow-x: hidden; background: black; color: white; }
+  a { color: white; }
+
+  /* Part 1 and part 3 text is mirrored, part 2 text is upside down. The answer boxes stay normal.
+     Part 1's question is not mirrored; its letters are jumbled in the HTML instead. */
+  label { display: inline-block; }
+  #layer1 h2, #layer1 p { transform: scaleX(-1); }
+  #layer2 h2, #layer2 p, #layer2 label { transform: rotate(180deg); }
+  #layer3 h2, #layer3 p, #layer3 label { transform: scaleX(-1); }
   .layer { display: none; margin-top: 40px; }
   input, button { font-size: 16px; padding: 4px 8px; margin-top: 6px; }
   #layer4 { position: fixed; top: 40%; left: 0; right: 0; text-align: center; margin: 0; }
@@ -15,24 +23,17 @@
 </head>
 <body>
 
-<h1>Order of Chaos</h1>
-<p>Henry, Zac, Cameron</p>
-<p>This puzzle has three parts. Solve each one, type your answer in the box, and press Enter to unlock the next part.</p>
-<p>You will need Excel or Google Sheets. Every file you download is your own copy, so nothing you change affects anyone else.</p>
-
 <div class="layer" id="layer1">
   <h2>1.</h2>
-  <p>Each row of this spreadsheet is one strip of a photo, and the rows have been shuffled.</p>
-  <p>Open it, click the arrow at the top of a column, and choose Sort Smallest to Largest. Try different columns. Only one puts the photo back in order. Remember everything you see.</p>
   <p><a href="Face-Portrait_26-10_Scrambled.xlsx" download="portrait.xlsx">portrait.xlsx</a></p>
-  <form id="form1"><label for="answer1">Whose face is it? Type their first name.</label><br><input id="answer1"> <button>Enter</button></form>
+  <form id="form1"><label for="answer1">sohWe acef si ti?</label><br><input id="answer1"> <button>Enter</button></form>
   <p id="note1"></p>
 </div>
 
 <div class="layer" id="layer2">
   <h2>2.</h2>
-  <p>Look at the coefficients of the sine and cosine terms. Consider what happens when you decrease their values, and adjust them until you get "the opposite of nothing."</p>
-  <p><a href="https://www.desmos.com/calculator/h23hpfxeri" target="_blank" rel="noopener">Open the graph</a> (opens in a new tab, come back here when you are done)</p>
+  <p>Lower the sine and cosine coefficients until you get the opposite of nothing.</p>
+  <p><a href="https://www.desmos.com/calculator/h23hpfxeri" target="_blank" rel="noopener">graph</a></p>
   <form id="form2"><label for="answer2">What does the graph show?</label><br><input id="answer2"> <button>Enter</button></form>
   <p id="note2"></p>
 </div>
@@ -41,7 +42,7 @@
   <h2>3.</h2>
   <p>Some of these cells are 0. Some are -0. A new design appears only under certain conditions. Format a new condition, starting from A1, and color what is less than nothing.</p>
   <p><a href="Inter_project.2.xlsx" download="spiral.xlsx">spiral.xlsx</a></p>
-  <form id="form3"><label for="answer3">What does the symbol stand for? Type one word.</label><br><input id="answer3"> <button>Enter</button></form>
+  <form id="form3"><label for="answer3">What do you find?</label><br><input id="answer3"> <button>Enter</button></form>
   <p id="note3"></p>
 </div>
 
@@ -52,9 +53,9 @@
 <script>
   // The answers for each part. Add more spellings if you want.
   const answers = {
-    1: ["henry"],
+    1: ["henry", "henry ye"],
     2: ["-0", "negative zero", "negative 0", "minus zero", "minus 0"],
-    3: ["chaos", "chaos star"]
+    3: ["chaos", "chaos star", "chaos symbol", "symbol of chaos", "star of chaos", "arrows of chaos"]
   };
 
   function check(n) {
