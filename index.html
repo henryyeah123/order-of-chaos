@@ -13,7 +13,7 @@
 
 html {
   background: #000;
-  color: white;
+  color: #fff;
   overflow-x: hidden;
 }
 
@@ -27,7 +27,7 @@ body {
 }
 
 a {
-  color: white;
+  color: #fff;
 }
 
 .layer {
@@ -82,54 +82,78 @@ summary {
   text-decoration: underline;
 }
 
-/* ----------------------------------
+/* ======================================
    FAINT GRAY HINTS
-   Halfway between corners and center
----------------------------------- */
+   VERY CLOSE TO CENTER OF SCREEN
+   ====================================== */
 
 .grey-hint {
   display: none;
-  position: fixed;
-  z-index: 8;
-  color: #303030;
+
+  /* Relative to the visible browser window */
+  position: fixed !important;
+
+  /* Exact screen center */
+  top: 50% !important;
+  left: 50% !important;
+
+  z-index: 15;
+
+  color: #303030 !important;
   font-family: Georgia, serif;
   font-size: 13px;
   font-style: italic;
   font-weight: normal;
   line-height: 1.5;
-  text-shadow: none;
+
+  text-shadow: none !important;
   pointer-events: none;
+
+  /* Prevent the hint itself from shaking */
   animation: none !important;
-  transform: none !important;
+  transition: none !important;
 }
 
-/* Stage 1: halfway from bottom-left */
+/* Stage 1: slightly LEFT and BELOW center */
+
 #grey1 {
-  bottom: 27%;
-  left: 25%;
-  max-width: 220px;
+  width: 190px;
   text-align: left;
+
+  transform:
+    translate(
+      calc(-50% - 115px),
+      calc(-50% + 90px)
+    ) !important;
 }
 
-/* Stage 2: halfway from upper-right */
+/* Stage 2: slightly RIGHT and ABOVE center */
+
 #grey2 {
-  top: 30%;
-  right: 25%;
-  max-width: 230px;
+  width: 190px;
   text-align: right;
+
+  transform:
+    translate(
+      calc(-50% + 115px),
+      calc(-50% - 90px)
+    ) !important;
 }
 
-/* Stage 3: halfway from bottom-right */
+/* Stage 3: slightly RIGHT and BELOW center */
+
 #grey3 {
-  bottom: 27%;
-  right: 25%;
-  max-width: 300px;
+  width: min(270px, 70vw);
   text-align: right;
+
+  transform:
+    translate(
+      calc(-50% + 105px),
+      calc(-50% + 105px)
+    ) !important;
 }
 
-/* ----------------------------------
-   CHAOS CANVAS
----------------------------------- */
+/* Keep hints visible above animations */
 
 #storm {
   position: fixed;
@@ -140,9 +164,9 @@ summary {
   pointer-events: none;
 }
 
-/* ----------------------------------
-   INCREASING DISTURBANCES
----------------------------------- */
+/* ======================================
+   INCREASING CHAOS
+   ====================================== */
 
 body.stage1 .layer:not(#layer4) {
   animation: shake1 .65s infinite;
@@ -150,7 +174,9 @@ body.stage1 .layer:not(#layer4) {
 
 body.stage2 .layer:not(#layer4) {
   animation: shake2 .30s infinite;
-  text-shadow: 3px 0 #ff3355, -3px 0 #00ffff;
+  text-shadow:
+    3px 0 #ff3355,
+    -3px 0 #00ffff;
 }
 
 body.stage3 .layer:not(#layer4) {
@@ -161,12 +187,15 @@ body.stage3 .layer:not(#layer4) {
   0%, 100% {
     translate: 0 0;
   }
+
   25% {
     translate: 5px -4px;
   }
+
   50% {
     translate: -6px 5px;
   }
+
   75% {
     translate: 5px 6px;
   }
@@ -176,12 +205,15 @@ body.stage3 .layer:not(#layer4) {
   0%, 100% {
     translate: 0 0;
   }
+
   25% {
     translate: 10px -7px;
   }
+
   50% {
     translate: -11px 8px;
   }
+
   75% {
     translate: 8px 10px;
   }
@@ -191,21 +223,24 @@ body.stage3 .layer:not(#layer4) {
   0%, 100% {
     translate: 0 0;
   }
+
   25% {
     translate: 17px -12px;
   }
+
   50% {
     translate: -18px 14px;
   }
+
   75% {
     translate: 14px 17px;
   }
 }
 
-/* ----------------------------------
+/* ======================================
    FINAL SCREEN
-   No text and no box
----------------------------------- */
+   NO HEADING OR BOX
+   ====================================== */
 
 #layer4 {
   position: fixed;
@@ -219,20 +254,24 @@ body.stage3 .layer:not(#layer4) {
   pointer-events: none;
 }
 
-/* ----------------------------------
+/* ======================================
    REDUCE EFFECTS BUTTON
----------------------------------- */
+   ====================================== */
 
 #effects-toggle {
   position: fixed;
   bottom: 12px;
   right: 12px;
   z-index: 100;
+
   padding: 9px 12px;
+
   background: #222;
   color: white;
+
   border: 1px solid #777;
   border-radius: 6px;
+
   font: 13px Arial, sans-serif;
   cursor: pointer;
 }
@@ -247,6 +286,34 @@ body.calm .layer {
   }
 }
 
+/* Small screens: keep hints on-screen */
+
+@media (max-width: 600px) {
+  #grey1 {
+    transform:
+      translate(
+        calc(-50% - 55px),
+        calc(-50% + 100px)
+      ) !important;
+  }
+
+  #grey2 {
+    transform:
+      translate(
+        calc(-50% + 55px),
+        calc(-50% - 100px)
+      ) !important;
+  }
+
+  #grey3 {
+    transform:
+      translate(
+        calc(-50% + 35px),
+        calc(-50% + 125px)
+      ) !important;
+  }
+}
+
 </style>
 </head>
 
@@ -258,9 +325,9 @@ body.calm .layer {
   Reduce effects
 </button>
 
-<!-- ----------------------------------
-     FAINT HINTS ON MAIN SCREEN
----------------------------------- -->
+<!-- ======================================
+     HIDDEN GRAY SCREEN MESSAGES
+     ====================================== -->
 
 <div class="grey-hint" id="grey1">
   typos-are-rewarded
@@ -276,9 +343,9 @@ body.calm .layer {
   “less than nothing”.
 </div>
 
-<!-- ----------------------------------
+<!-- ======================================
      STAGE 1: EXCEL PORTRAIT
----------------------------------- -->
+     ====================================== -->
 
 <section class="layer" id="layer1">
 
@@ -293,12 +360,22 @@ body.calm .layer {
   </p>
 
   <form id="form1">
+
     <label for="answer1">
       sohWe acef si ti?
     </label>
+
     <br>
-    <input id="answer1" autocomplete="off">
-    <button type="submit">Enter</button>
+
+    <input
+      id="answer1"
+      autocomplete="off"
+    >
+
+    <button type="submit">
+      Enter
+    </button>
+
   </form>
 
   <details>
@@ -315,9 +392,9 @@ body.calm .layer {
 
 </section>
 
-<!-- ----------------------------------
+<!-- ======================================
      STAGE 2: DESMOS
----------------------------------- -->
+     ====================================== -->
 
 <section class="layer" id="layer2">
 
@@ -338,12 +415,22 @@ body.calm .layer {
   </p>
 
   <form id="form2">
+
     <label for="answer2">
       What does the graph show?
     </label>
+
     <br>
-    <input id="answer2" autocomplete="off">
-    <button type="submit">Enter</button>
+
+    <input
+      id="answer2"
+      autocomplete="off"
+    >
+
+    <button type="submit">
+      Enter
+    </button>
+
   </form>
 
   <details>
@@ -361,9 +448,9 @@ body.calm .layer {
 
 </section>
 
-<!-- ----------------------------------
+<!-- ======================================
      STAGE 3: EXCEL SPIRAL
----------------------------------- -->
+     ====================================== -->
 
 <section class="layer" id="layer3">
 
@@ -386,12 +473,22 @@ body.calm .layer {
   </p>
 
   <form id="form3">
+
     <label for="answer3">
       What do you find?
     </label>
+
     <br>
-    <input id="answer3" autocomplete="off">
-    <button type="submit">Enter</button>
+
+    <input
+      id="answer3"
+      autocomplete="off"
+    >
+
+    <button type="submit">
+      Enter
+    </button>
+
   </form>
 
   <details>
@@ -409,10 +506,9 @@ body.calm .layer {
 
 </section>
 
-<!-- ----------------------------------
-     FINAL SCREEN
-     Intentionally empty
----------------------------------- -->
+<!-- ======================================
+     FINAL SCREEN: EMPTY
+     ====================================== -->
 
 <section class="layer" id="layer4"></section>
 
@@ -421,8 +517,8 @@ body.calm .layer {
 /* Stop cheating- It’s UChicago, challenge yourself! */
 
 /*
-  Answers are stored as SHA-256 hashes
-  rather than directly readable strings.
+  Answer verification uses SHA-256 digests.
+  Plaintext answer lists are not stored here.
 */
 
 const digests = {
@@ -434,23 +530,40 @@ const digests = {
     "927a3aed189d610b2e151c4208913b3ed0cb38f6be613756819b1513c8924d7f",
 
   second: new Set([
+
     "ed79f26d03f412bde3db206601a698e0bb451bea9e3cc25289636ac17ea74b0a",
+
     "20e15c81faba74d8b574804fa50d6235fbd881084816f52f687121d48b6c4048",
+
     "71a5a6af68434a598e6def21898286820f850f24ceec24f77e4ee8337caf1372",
+
     "98f5f963c6adc5e4936fd7921496195d04ca905aedce43636f0629bf73542697",
+
     "de66f767844aa1854f51cd3e626af5a23244aec1dcf85525697e1b87c6b9051c"
+
   ]),
 
   third: new Set([
+
     "5d5bddb577102d0a960bcf6fea9050c10fe5e9feddcb5c2170ccab872db9ee87",
+
     "27489638f8b69622d849000eb53be4d66b36245dcc2bf2cc7f1789d9fdbedaa0",
+
     "e2f1887551af00a3191dff35c1657ce0104bba60a9452c077ac6430131d842c2",
+
     "389e8ecbfcc07535c5b0637e98fdf9fa0c39bb4278e7fe8fa38696cd75b00299",
+
     "7ab157c86525f2c74588c11a611a6db180b55931f5211a63fa771e26969330fa",
+
     "47e9ec33822978eac12d6f9ba4471e9cbb2b8c1b47bfc708ca9ea9b1c42867c7"
+
   ])
 
 };
+
+/* ======================================
+   HASH CHECKING
+   ====================================== */
 
 async function hash(value) {
 
@@ -495,9 +608,9 @@ async function validAnswer(n, guess) {
 
 }
 
-/* ----------------------------------
+/* ======================================
    ANIMATION ENGINE
----------------------------------- */
+   ====================================== */
 
 const canvas = document.getElementById("storm");
 const ctx = canvas.getContext("2d");
@@ -513,6 +626,7 @@ const preference = matchMedia(
 let reduced = preference.matches;
 
 let stage = 0;
+
 let particles = [];
 let sparks = [];
 let bolts = [];
@@ -576,10 +690,7 @@ resize();
 
 function createParticle(level) {
 
-  const angle = random(
-    0,
-    Math.PI * 2
-  );
+  const angle = random(0, Math.PI * 2);
 
   const speed = level === 3
     ? random(120, 340)
@@ -606,6 +717,7 @@ function createParticle(level) {
 
     rotation: random(0, 6.28),
     spin: random(-5, 5),
+
     phase: random(0, 6.28),
     pulse: random(1, 3),
     life: random(2, 8)
@@ -1070,9 +1182,9 @@ function advanceChaos(level) {
 
 }
 
-/* ----------------------------------
+/* ======================================
    GRAY HINT VISIBILITY
----------------------------------- */
+   ====================================== */
 
 function showGreyHint(n) {
 
@@ -1082,18 +1194,20 @@ function showGreyHint(n) {
     i++
   ) {
 
-    document.getElementById(
+    const hint = document.getElementById(
       "grey" + i
-    ).style.display =
+    );
+
+    hint.style.display =
       i === n ? "block" : "none";
 
   }
 
 }
 
-/* ----------------------------------
+/* ======================================
    STAGE PROGRESSION
----------------------------------- */
+   ====================================== */
 
 async function check(n) {
 
@@ -1215,9 +1329,9 @@ for (
 
 }
 
-/* ----------------------------------
+/* ======================================
    REDUCED EFFECTS
----------------------------------- */
+   ====================================== */
 
 function updateEffectsButton() {
 
