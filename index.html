@@ -1,117 +1,469 @@
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Order of Chaos</title>
+
 <style>
-  body { font-family: Georgia, serif; max-width: 600px; margin: 40px auto; padding: 0 16px; line-height: 1.5; text-align: center; }
-  html, body { overflow-x: hidden; background: black; color: white; }
+  html, body {
+    overflow-x: hidden;
+    background: black;
+    color: white;
+  }
+
+  body {
+    font-family: Georgia, serif;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 16px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
   a { color: white; }
 
-  /* Part 1 and part 3 text is mirrored, part 2 text is upside down. The answer boxes stay normal.
-     Part 1's question is not mirrored; its letters are jumbled in the HTML instead. */
   label { display: inline-block; }
-  #layer1 h2, #layer1 p { transform: scaleX(-1); }
-  #layer2 h2, #layer2 p, #layer2 label { transform: rotate(180deg); }
-  #layer3 h2, #layer3 p, #layer3 label { transform: scaleX(-1); }
-  .layer { display: none; margin-top: 40px; }
-  input, button { font-size: 16px; padding: 4px 8px; margin-top: 6px; }
-  #layer4 { position: fixed; top: 40%; left: 0; right: 0; text-align: center; margin: 0; }
-  #layer4 h2 { font-size: 72px; margin: 0; }
+
+  /* Original transformations */
+  #layer1 h2, #layer1 p {
+    transform: scaleX(-1);
+  }
+
+  #layer2 h2, #layer2 p, #layer2 label {
+    transform: rotate(180deg);
+  }
+
+  #layer3 h2, #layer3 p, #layer3 label {
+    transform: scaleX(-1);
+  }
+
+  .layer {
+    display: none;
+    margin-top: 40px;
+  }
+
+  input, button {
+    font-size: 16px;
+    padding: 4px 8px;
+    margin-top: 6px;
+  }
+
+  /* Clickable hints */
+  details {
+    margin: 12px auto;
+    max-width: 400px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  summary {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  details[open] {
+    padding: 8px;
+  }
+
+  /* Stage 1: slight instability */
+  body.stage-one #layer1 {
+    animation: subtleShake 3s infinite;
+  }
+
+  @keyframes subtleShake {
+    0%, 90%, 100% {
+      translate: 0 0;
+    }
+    92% { translate: 2px 0; }
+    95% { translate: -2px 1px; }
+  }
+
+  /* Stage 2: stronger disturbances */
+  body.stage-two #layer1,
+  body.stage-two #layer2 {
+    animation: strongerShake 1.2s infinite;
+  }
+
+  body.stage-two {
+    text-shadow: 1px 0 red, -1px 0 cyan;
+  }
+
+  @keyframes strongerShake {
+    0%, 100% { translate: 0 0; }
+    25% { translate: 3px -2px; }
+    50% { translate: -3px 2px; }
+    75% { translate: 2px 3px; }
+  }
+
+  /* Final stage: no box around Chaos */
+  #layer4 {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  #layer4 h2 {
+    font-size: clamp(65px, 13vw, 160px);
+    margin: 0;
+    border: none;
+    background: none;
+    text-shadow:
+      5px 0 red,
+      -5px 0 cyan,
+      0 5px blue;
+    animation:
+      finalShake 0.12s infinite,
+      flicker 0.8s infinite;
+  }
+
+  @keyframes finalShake {
+    0% {
+      transform: translate(4px, -3px) rotate(-3deg);
+    }
+    50% {
+      transform: translate(-5px, 4px) rotate(3deg);
+    }
+    100% {
+      transform: translate(3px, -4px) rotate(-2deg);
+    }
+  }
+
+  @keyframes flicker {
+    0%, 80%, 100% { opacity: 1; }
+    85% { opacity: 0.5; }
+    90% { opacity: 0.9; }
+  }
+
+  /* Floating fragments on final screen */
+  .fragment {
+    position: fixed;
+    pointer-events: none;
+    z-index: 90;
+    font-size: 18px;
+    color: white;
+    animation: fragmentMove 3s infinite alternate;
+  }
+
+  @keyframes fragmentMove {
+    from {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.4;
+    }
+    to {
+      transform: translate(40px, -50px) rotate(180deg);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 </style>
 </head>
+
 <body>
 
+<!-- STAGE 1 -->
 <div class="layer" id="layer1">
   <h2>1.</h2>
-  <p><a href="Face-Portrait_26-10_Scrambled.xlsx" download="portrait.xlsx">portrait.xlsx</a></p>
-  <form id="form1"><label for="answer1">sohWe acef si ti?</label><br><input id="answer1"> <button>Enter</button></form>
-  <p id="note1"></p>
+
+  <p>
+    <a href="Face-Portrait_26-10_Scrambled.xlsx"
+       download="whose-face-rearrange-the-name.xlsx">
+       portrait.xlsx
+    </a>
+  </p>
+
+  <form id="form1">
+    <label for="answer1">sohWe acef si ti?</label><br>
+    <input id="answer1" autocomplete="off">
+    <button>Enter</button>
+  </form>
+
+  <details>
+    <summary>Hint 1</summary>
+    Look closely at the Excel portrait.
+    The identity is part of the puzzle.
+  </details>
+
+  <details>
+    <summary>Hint 2</summary>
+    Find the person's name, then rearrange
+    its letters to create a different ordering.
+  </details>
+
+  <p id="note1" aria-live="polite"></p>
 </div>
 
+
+<!-- STAGE 2 -->
 <div class="layer" id="layer2">
   <h2>2.</h2>
-  <p>Lower the sine and cosine coefficients until you get the opposite of nothing.</p>
-  <p><a href="https://www.desmos.com/calculator/h23hpfxeri" target="_blank" rel="noopener">graph</a></p>
-  <form id="form2"><label for="answer2">What does the graph show?</label><br><input id="answer2"> <button>Enter</button></form>
-  <p id="note2"></p>
+
+  <p>
+    Order is hidden beneath the chaos.
+    Simplify the graph to reveal what remains.
+  </p>
+
+  <p>
+    <a href="https://www.desmos.com/calculator/h23hpfxeri"
+       target="_blank" rel="noopener">
+       graph
+    </a>
+  </p>
+
+  <form id="form2">
+    <label for="answer2">What does the graph show?</label><br>
+    <input id="answer2" autocomplete="off">
+    <button>Enter</button>
+  </form>
+
+  <details>
+    <summary>Hint 1</summary>
+    Focus on the coefficients of the
+    sine and cosine terms.
+  </details>
+
+  <details>
+    <summary>Hint 2</summary>
+    Set both coefficients to zero.
+    Look at the resulting symbol.
+    Think about the opposite of nothing.
+  </details>
+
+  <p id="note2" aria-live="polite"></p>
 </div>
 
+
+<!-- STAGE 3 -->
 <div class="layer" id="layer3">
   <h2>3.</h2>
-  <p>Some of these cells are 0. Some are -0. A new design appears only under certain conditions. Format a new condition, starting from A1, and color what is less than nothing.</p>
-  <p><a href="Inter_project.2.xlsx" download="spiral.xlsx">spiral.xlsx</a></p>
-  <form id="form3"><label for="answer3">What do you find?</label><br><input id="answer3"> <button>Enter</button></form>
-  <p id="note3"></p>
+
+  <p>
+    Some cells look identical, but they aren't.
+    Reveal the hidden design by changing
+    how the spreadsheet displays its values.
+  </p>
+
+  <p>
+    <a href="Inter_project.2.xlsx"
+       download="spiral-highlight-below-zero.xlsx">
+       spiral.xlsx
+    </a>
+  </p>
+
+  <form id="form3">
+    <label for="answer3">What do you find?</label><br>
+    <input id="answer3" autocomplete="off">
+    <button>Enter</button>
+  </form>
+
+  <details>
+    <summary>Hint 1</summary>
+    Use Excel's Conditional Formatting tool.
+    Not every zero is what it seems.
+  </details>
+
+  <details>
+    <summary>Hint 2</summary>
+    Starting from A1, create a formatting
+    condition for values less than zero.
+    Color the matching cells.
+  </details>
+
+  <p id="note3" aria-live="polite"></p>
 </div>
 
+
+<!-- FINAL SCREEN -->
 <div class="layer" id="layer4">
   <h2>Chaos.</h2>
 </div>
 
+
 <script>
-  // The answers for parts 2 and 3. Add more spellings if you want.
-  // Part 1 is checked by isScrambledHenry() below instead.
-  const answers = {
-    2: ["-0", "negative zero", "negative 0", "minus zero", "minus 0"],
-    3: ["chaos", "chaos star", "chaos symbol", "symbol of chaos", "star of chaos", "arrows of chaos"]
+  // Hashes obscure the accepted answers.
+  // This is not secure server-side validation.
+
+  const acceptedHashes = {
+    2: new Set([
+      "ed79f26d03f412bde3db206601a698e0bb451bea9e3cc25289636ac17ea74b0a",
+      "20e15c81faba74d8b574804fa50d6235fbd881084816f52f687121d48b6c4048",
+      "71a5a6af68434a598e6def21898286820f850f24ceec24f77e4ee8337caf1372",
+      "98f5f963c6adc5e4936fd7921496195d04ca905aedce43636f0629bf73542697",
+      "de66f767844aa1854f51cd3e626af5a23244aec1dcf85525697e1b87c6b9051c"
+    ]),
+    3: new Set([
+      "5d5bddb577102d0a960bcf6fea9050c10fe5e9feddcb5c2170ccab872db9ee87",
+      "27489638f8b69622d849000eb53be4d66b36245dcc2bf2cc7f1789d9fdbedaa0",
+      "e2f1887551af00a3191dff35c1657ce0104bba60a9452c077ac6430131d842c2",
+      "389e8ecbfcc07535c5b0637e98fdf9fa0c39bb4278e7fe8fa38696cd75b00299",
+      "7ab157c86525f2c74588c11a611a6db180b55931f5211a63fa771e26969330fa",
+      "47e9ec33822978eac12d6f9ba4471e9cbb2b8c1b47bfc708ca9ea9b1c42867c7"
+    ])
   };
 
-  // True if the guess uses exactly the letters of "henry" in a different order, like "yrneh".
-  function isScrambledHenry(guess) {
-    const sorted = guess.split("").sort().join("");
-    return sorted === "ehnry" && guess !== "henry";
+  const completed = new Set();
+
+  async function hashText(value) {
+    const bytes = new TextEncoder().encode(value);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+
+    return Array.from(new Uint8Array(digest))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 
-  // Throw every piece of the page in a random direction.
-  function chaos() {
-    const pieces = document.querySelectorAll("h1, p, h2, li, form");
-    pieces.forEach((piece) => {
-      if (piece.closest("#layer4")) return;
-      const x = (Math.random() - 0.5) * window.innerWidth;
-      const y = (Math.random() - 0.5) * window.innerHeight;
-      const turn = (Math.random() - 0.5) * 720;
-      piece.style.transition = "transform 3s ease-out";
-      piece.style.transform = "translate(" + x + "px, " + y + "px) rotate(" + turn + "deg)";
-    });
-  }
+  async function isCorrect(n, guess) {
+    if (n === 1) {
+      // Require a rearrangement, not the original name.
+      const sorted = [...guess].sort().join("");
+      const sortedHash = await hashText(sorted);
+      const guessHash = await hashText(guess);
 
-  function check(n) {
-    // Lowercase the guess and turn a typed minus sign (−) into a plain hyphen (-).
-    const guess = document.getElementById("answer" + n).value.trim().toLowerCase().replace("−", "-");
-    const note = document.getElementById("note" + n);
-    if (n === 1 && guess === "henry") {
-      note.textContent = "Not like that.";
-      return;
+      return (
+        sortedHash ===
+        "1dad59225a424bf4506895d97c2f29b86ef95c9390816d49141b6a2ea33cbfe3" &&
+        guessHash !==
+        "927a3aed189d610b2e151c4208913b3ed0cb38f6be613756819b1513c8924d7f"
+      );
     }
-    const right = n === 1 ? isScrambledHenry(guess) : answers[n].includes(guess);
-    if (right) {
+
+    const hash = await hashText(guess);
+    return acceptedHashes[n].has(hash);
+  }
+
+  // Scatter page elements during the final transition.
+  function chaos() {
+    const pieces = document.querySelectorAll(
+      "#layer1 h2, #layer1 p, #layer1 form, " +
+      "#layer2 h2, #layer2 p, #layer2 form, " +
+      "#layer3 h2, #layer3 p, #layer3 form, " +
+      "details"
+    );
+
+    pieces.forEach(piece => {
+      const x = (Math.random() - 0.5) *
+        window.innerWidth * 1.5;
+      const y = (Math.random() - 0.5) *
+        window.innerHeight * 1.5;
+      const turn = (Math.random() - 0.5) * 1080;
+
+      piece.style.transition =
+        "transform 3s ease-out, opacity 3s";
+
+      piece.style.transform =
+        `translate(${x}px, ${y}px) rotate(${turn}deg)`;
+
+      piece.style.opacity = "0.25";
+    });
+
+    // Create random floating visual fragments.
+    const symbols = [
+      "0", "-0", "?", "!", "*", "+", "×", "↗", "↙"
+    ];
+
+    for (let i = 0; i < 35; i++) {
+      const fragment = document.createElement("span");
+      fragment.className = "fragment";
+
+      fragment.textContent =
+        symbols[Math.floor(Math.random() * symbols.length)];
+
+      fragment.style.left = Math.random() * 100 + "vw";
+      fragment.style.top = Math.random() * 100 + "vh";
+      fragment.style.fontSize =
+        (14 + Math.random() * 45) + "px";
+      fragment.style.animationDelay =
+        (-Math.random() * 3) + "s";
+
+      document.body.appendChild(fragment);
+    }
+
+    document.getElementById("layer4").style.display = "flex";
+  }
+
+  async function check(n) {
+    if (completed.has(n)) return;
+
+    const input = document.getElementById("answer" + n);
+    const note = document.getElementById("note" + n);
+    const form = document.getElementById("form" + n);
+
+    const guess = input.value
+      .trim()
+      .toLowerCase()
+      .replace(/\u2212/g, "-")
+      .replace(/\s+/g, " ");
+
+    // Prevent duplicate submissions during validation.
+    if (form.dataset.checking === "true") return;
+    form.dataset.checking = "true";
+
+    try {
+      const right = await isCorrect(n, guess);
+
+      if (!right) {
+        note.textContent = "Try again.";
+        return;
+      }
+
+      completed.add(n);
       note.textContent = "Correct.";
-      const next = document.getElementById("layer" + (n + 1));
-      next.style.display = "block";
+      input.disabled = true;
+      form.querySelector("button").disabled = true;
+
+      const next =
+        document.getElementById("layer" + (n + 1));
+
+      if (n === 1) {
+        document.body.classList.add("stage-one");
+      }
+
+      if (n === 2) {
+        document.body.classList.remove("stage-one");
+        document.body.classList.add("stage-two");
+      }
+
       if (n === 3) {
         chaos();
       } else {
-        next.scrollIntoView({ behavior: "smooth" });
+        next.style.display = "block";
+        next.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
       }
-    } else {
-      note.textContent = "Try again.";
+    } catch (error) {
+      note.textContent =
+        "Could not check the answer. Reload and try again.";
+      console.error(error);
+    } finally {
+      form.dataset.checking = "false";
     }
   }
 
-  document.getElementById("form1").addEventListener("submit", (event) => {
-    event.preventDefault();
-    check(1);
-  });
-  document.getElementById("form2").addEventListener("submit", (event) => {
-    event.preventDefault();
-    check(2);
-  });
-  document.getElementById("form3").addEventListener("submit", (event) => {
-    event.preventDefault();
-    check(3);
-  });
+  for (let n = 1; n <= 3; n++) {
+    document.getElementById("form" + n)
+      .addEventListener("submit", event => {
+        event.preventDefault();
+        check(n);
+      });
+  }
 
   document.getElementById("layer1").style.display = "block";
 </script>
