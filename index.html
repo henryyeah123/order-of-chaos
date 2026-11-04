@@ -7,43 +7,70 @@
 <title>Order of Chaos</title>
 
 <style>
+
+/* ======================================
+   GENERAL STYLING
+   ====================================== */
+
 * {
   box-sizing: border-box;
 }
 
 html {
   background: #000;
-  color: white;
+  color: #fff;
   overflow-x: hidden;
 }
 
 body {
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: #000;
   color: #fff;
   font-family: Georgia, serif;
   text-align: center;
-  min-height: 100vh;
 }
 
-/* MAIN PUZZLE AREA */
+a {
+  color: #fff;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ======================================
+   MAIN PUZZLE AREA
+   ====================================== */
+
+.puzzle-container {
+  position: relative;
+  z-index: 10;
+
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px 15px;
+}
 
 .layer {
   display: none;
   position: relative;
-  z-index: 10;
+
   width: min(650px, 94vw);
   margin: 0 auto;
-  padding: 30px 18px;
-}
 
-.puzzle-container {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 20px 18px;
+
+  z-index: 10;
 }
 
 h2 {
@@ -54,13 +81,10 @@ p {
   line-height: 1.5;
 }
 
-a {
-  color: white;
-}
-
 input {
   width: min(220px, 55vw);
   padding: 10px;
+
   font-size: 16px;
   margin: 8px;
 }
@@ -68,7 +92,6 @@ input {
 button {
   padding: 10px 15px;
   font-size: 16px;
-  cursor: pointer;
 }
 
 details {
@@ -86,7 +109,9 @@ summary {
   min-height: 22px;
 }
 
-/* MIRRORED AND ROTATED TEXT */
+/* ======================================
+   MIRRORED AND ROTATED TEXT
+   ====================================== */
 
 #layer1 h2,
 #layer1 .puzzle-text {
@@ -104,24 +129,44 @@ summary {
 }
 
 /* ======================================
-   GRAY HINTS
-   ALL POSITIONED VERY CLOSE TO CENTER
+   PROTECTED GRAY HINT AREA
    ====================================== */
+
+/*
+  The gray hints are positioned in a
+  reserved space below the puzzle.
+
+  This prevents overlap with:
+  - Questions
+  - Answer boxes
+  - Buttons
+  - Clickable hints
+
+  They also sit above the animation canvas.
+*/
+
+.grey-hint-zone {
+  position: relative;
+
+  width: min(650px, 94vw);
+
+  min-height: 90px;
+
+  margin: 10px auto 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 50;
+
+  pointer-events: none;
+}
 
 .grey-hint {
   display: none;
 
-  position: fixed !important;
-
-  /* Center of visible screen */
-  top: 50vh !important;
-  left: 50vw !important;
-
-  /* Override old corner positioning */
-  right: auto !important;
-  bottom: auto !important;
-
-  z-index: 30;
+  position: relative;
 
   color: #303030 !important;
 
@@ -131,51 +176,41 @@ summary {
   font-weight: normal;
 
   line-height: 1.5;
+
   text-shadow: none !important;
 
-  pointer-events: none;
   animation: none !important;
 
-  max-width: 270px;
+  pointer-events: none;
+
+  max-width: 300px;
 }
 
-/* Stage 1: just below-left of center */
+/* Stage 1 */
 
 #grey1 {
   width: 190px;
   text-align: center;
 
-  transform:
-    translate(
-      calc(-50% - 55px),
-      calc(-50% + 65px)
-    ) !important;
+  transform: translateX(-55px);
 }
 
-/* Stage 2: just above-right of center */
+/* Stage 2 */
 
 #grey2 {
   width: 190px;
   text-align: center;
 
-  transform:
-    translate(
-      calc(-50% + 55px),
-      calc(-50% - 65px)
-    ) !important;
+  transform: translateX(55px);
 }
 
-/* Stage 3: just below-right of center */
+/* Stage 3 */
 
 #grey3 {
-  width: min(270px, 75vw);
+  width: min(300px, 75vw);
   text-align: center;
 
-  transform:
-    translate(
-      calc(-50% + 55px),
-      calc(-50% + 75px)
-    ) !important;
+  transform: translateX(35px);
 }
 
 /* ======================================
@@ -185,14 +220,17 @@ summary {
 #storm {
   position: fixed;
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   z-index: 3;
+
   pointer-events: none;
 }
 
 /* ======================================
-   INCREASING STAGE DISTURBANCES
+   INCREASING DISTURBANCES
    ====================================== */
 
 body.stage1 .layer {
@@ -201,6 +239,7 @@ body.stage1 .layer {
 
 body.stage2 .layer {
   animation: shake2 .30s infinite;
+
   text-shadow:
     3px 0 #ff3355,
     -3px 0 #00ffff;
@@ -211,51 +250,100 @@ body.stage3 .layer {
 }
 
 @keyframes shake1 {
-  0%, 100% { translate: 0 0; }
-  25% { translate: 5px -4px; }
-  50% { translate: -6px 5px; }
-  75% { translate: 5px 6px; }
+  0%, 100% {
+    translate: 0 0;
+  }
+
+  25% {
+    translate: 5px -4px;
+  }
+
+  50% {
+    translate: -6px 5px;
+  }
+
+  75% {
+    translate: 5px 6px;
+  }
 }
 
 @keyframes shake2 {
-  0%, 100% { translate: 0 0; }
-  25% { translate: 10px -7px; }
-  50% { translate: -11px 8px; }
-  75% { translate: 8px 10px; }
+  0%, 100% {
+    translate: 0 0;
+  }
+
+  25% {
+    translate: 10px -7px;
+  }
+
+  50% {
+    translate: -11px 8px;
+  }
+
+  75% {
+    translate: 14px 17px;
+  }
 }
 
 @keyframes shake3 {
-  0%, 100% { translate: 0 0; }
-  25% { translate: 17px -12px; }
-  50% { translate: -18px 14px; }
-  75% { translate: 14px 17px; }
+  0%, 100% {
+    translate: 0 0;
+  }
+
+  25% {
+    translate: 17px -12px;
+  }
+
+  50% {
+    translate: -18px 14px;
+  }
+
+  75% {
+    translate: 14px 17px;
+  }
 }
 
-/* FINAL SCREEN: NO HEADING OR BOX */
+/* ======================================
+   FINAL SCREEN
+   ====================================== */
 
 #layer4 {
+  display: none;
+
   position: fixed;
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   margin: 0;
   padding: 0;
+
+  z-index: 2;
+
   background: transparent;
   border: none;
+  box-shadow: none;
+
   pointer-events: none;
 }
 
-/* EFFECTS BUTTON */
+/* ======================================
+   EFFECTS BUTTON
+   ====================================== */
 
 #effects-toggle {
   position: fixed;
+
   bottom: 12px;
   right: 12px;
+
   z-index: 100;
 
   padding: 9px 12px;
+
   background: #222;
-  color: #fff;
+  color: white;
 
   border: 1px solid #777;
   border-radius: 6px;
@@ -273,65 +361,48 @@ body.calm .layer {
   }
 }
 
-/* MOBILE ADJUSTMENTS */
+/* ======================================
+   MOBILE ADJUSTMENTS
+   ====================================== */
 
 @media (max-width: 600px) {
+
   .grey-hint {
     font-size: 12px;
   }
 
+  .grey-hint-zone {
+    min-height: 110px;
+  }
+
   #grey1 {
-    transform:
-      translate(
-        calc(-50% - 35px),
-        calc(-50% + 100px)
-      ) !important;
+    transform: translateX(-25px);
   }
 
   #grey2 {
-    transform:
-      translate(
-        calc(-50% + 35px),
-        calc(-50% - 100px)
-      ) !important;
+    transform: translateX(25px);
   }
 
   #grey3 {
-    transform:
-      translate(
-        calc(-50% + 25px),
-        calc(-50% + 125px)
-      ) !important;
+    transform: translateX(15px);
   }
+
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- ANIMATED CHAOS BACKGROUND -->
+
 <canvas id="storm" aria-hidden="true"></canvas>
+
+<!-- EFFECTS CONTROL -->
 
 <button id="effects-toggle" type="button">
   Reduce effects
 </button>
-
-<!-- ======================================
-     FAINT HINTS NEAR SCREEN CENTER
-     ====================================== -->
-
-<div class="grey-hint" id="grey1">
-  typos-are-rewarded
-</div>
-
-<div class="grey-hint" id="grey2">
-  do you see a number?
-</div>
-
-<div class="grey-hint" id="grey3">
-  In the first sheet, you rearranged the data.
-  Now, keep the data, and try choosing numbers
-  “less than nothing”.
-</div>
 
 <!-- ======================================
      MAIN PUZZLE
@@ -346,11 +417,13 @@ body.calm .layer {
     <h2>1.</h2>
 
     <p class="puzzle-text">
+
       <a
         href="Face-Portrait_26-10_Scrambled.xlsx"
         download="atad-tros-nmuloc-u.xlsx">
         atad-tros-nmuloc-u.xlsx
       </a>
+
     </p>
 
     <form id="form1">
@@ -360,6 +433,7 @@ body.calm .layer {
       </label>
 
       <div>
+
         <input
           id="answer1"
           autocomplete="off"
@@ -369,6 +443,7 @@ body.calm .layer {
         <button type="submit">
           Enter
         </button>
+
       </div>
 
     </form>
@@ -399,12 +474,14 @@ body.calm .layer {
     </p>
 
     <p class="puzzle-text">
+
       <a
         href="https://www.desmos.com/calculator/h23hpfxeri"
         target="_blank"
         rel="noopener">
         no-sin&amp;cosine=no-chaos
       </a>
+
     </p>
 
     <form id="form2">
@@ -414,6 +491,7 @@ body.calm .layer {
       </label>
 
       <div>
+
         <input
           id="answer2"
           autocomplete="off"
@@ -423,6 +501,7 @@ body.calm .layer {
         <button type="submit">
           Enter
         </button>
+
       </div>
 
     </form>
@@ -457,11 +536,13 @@ body.calm .layer {
     </p>
 
     <p class="puzzle-text">
+
       <a
         href="Inter_project.2.xlsx"
         download="spiral-highlight-below-zero.xlsx">
         spiral.xlsx
       </a>
+
     </p>
 
     <form id="form3">
@@ -471,6 +552,7 @@ body.calm .layer {
       </label>
 
       <div>
+
         <input
           id="answer3"
           autocomplete="off"
@@ -480,6 +562,7 @@ body.calm .layer {
         <button type="submit">
           Enter
         </button>
+
       </div>
 
     </form>
@@ -499,9 +582,29 @@ body.calm .layer {
 
   </section>
 
+  <!-- PROTECTED GRAY HINT ZONE -->
+
+  <div class="grey-hint-zone">
+
+    <div class="grey-hint" id="grey1">
+      typos-are-rewarded
+    </div>
+
+    <div class="grey-hint" id="grey2">
+      do you see a number?
+    </div>
+
+    <div class="grey-hint" id="grey3">
+      In the first sheet, you rearranged the data.
+      Now, keep the data, and try choosing numbers
+      “less than nothing”.
+    </div>
+
+  </div>
+
 </main>
 
-<!-- FINAL SCREEN: INTENTIONALLY EMPTY -->
+<!-- FINAL SCREEN: EMPTY -->
 
 <section class="layer" id="layer4"></section>
 
@@ -513,6 +616,10 @@ body.calm .layer {
   SHA-256 answer verification.
   Answers are not stored as plaintext lists.
 */
+
+/* ======================================
+   ANSWER HASHES
+   ====================================== */
 
 const digests = {
 
@@ -541,7 +648,12 @@ const digests = {
 
 };
 
+/* ======================================
+   HASH CHECKING
+   ====================================== */
+
 async function hash(value) {
+
   const bytes = new TextEncoder().encode(value);
 
   const result = await crypto.subtle.digest(
@@ -553,17 +665,20 @@ async function hash(value) {
     new Uint8Array(result),
     byte => byte.toString(16).padStart(2, "0")
   ).join("");
+
 }
 
 async function validAnswer(n, guess) {
 
   if (n === 1) {
+
     const sorted = [...guess].sort().join("");
 
     return (
       await hash(sorted) === digests.firstSorted &&
       await hash(guess) !== digests.firstOriginal
     );
+
   }
 
   const result = await hash(guess);
@@ -577,6 +692,7 @@ async function validAnswer(n, guess) {
   }
 
   return false;
+
 }
 
 /* ======================================
@@ -597,6 +713,7 @@ const preference = matchMedia(
 let reduced = preference.matches;
 
 let stage = 0;
+
 let particles = [];
 let sparks = [];
 let bolts = [];
@@ -628,19 +745,34 @@ function random(min, max) {
 }
 
 function choose(array) {
-  return array[Math.floor(Math.random() * array.length)];
+  return array[
+    Math.floor(Math.random() * array.length)
+  ];
 }
 
 function resize() {
-  const ratio = Math.min(devicePixelRatio || 1, 2);
 
-  canvas.width = Math.round(innerWidth * ratio);
-  canvas.height = Math.round(innerHeight * ratio);
+  const ratio = Math.min(
+    devicePixelRatio || 1,
+    2
+  );
 
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  canvas.width = Math.round(
+    innerWidth * ratio
+  );
+
+  canvas.height = Math.round(
+    innerHeight * ratio
+  );
+
+  ctx.setTransform(
+    ratio, 0, 0, ratio, 0, 0
+  );
+
 }
 
 addEventListener("resize", resize);
+
 resize();
 
 function createParticle(level) {
@@ -654,6 +786,7 @@ function createParticle(level) {
       : random(25, 95);
 
   return {
+
     x: random(0, innerWidth),
     y: random(0, innerHeight),
 
@@ -671,34 +804,46 @@ function createParticle(level) {
 
     rotation: random(0, 6.28),
     spin: random(-5, 5),
+
     phase: random(0, 6.28),
     pulse: random(1, 3),
     life: random(2, 8)
+
   };
+
 }
 
 function makeLightning() {
 
   let x = random(0, innerWidth);
-  let y = random(-30, innerHeight * .2);
+  let y = random(
+    -30,
+    innerHeight * .2
+  );
 
   const points = [{ x, y }];
 
   for (let i = 0; i < 12; i++) {
+
     x += random(-60, 60);
     y += random(20, 60);
+
     points.push({ x, y });
+
   }
 
   bolts.push({
+
     points,
     color: choose(colors),
     life: .35
+
   });
 
   if (bolts.length > 20) {
     bolts.shift();
   }
+
 }
 
 function makeExplosion() {
@@ -708,25 +853,43 @@ function makeExplosion() {
 
   const count = stage === 3
     ? 75
-    : stage === 2 ? 35 : 15;
+    : stage === 2
+      ? 35
+      : 15;
 
   for (let i = 0; i < count; i++) {
 
     const angle = random(0, 6.28);
-    const speed = random(40, stage * 130 + 50);
+
+    const speed = random(
+      40,
+      stage * 130 + 50
+    );
 
     sparks.push({
-      x, y,
+
+      x,
+      y,
+
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
+
       color: choose(colors),
       life: random(.4, 1.5)
+
     });
+
   }
 
   if (sparks.length > 2500) {
-    sparks.splice(0, sparks.length - 2500);
+
+    sparks.splice(
+      0,
+      sparks.length - 2500
+    );
+
   }
+
 }
 
 function drawParticles(dt, time) {
@@ -735,22 +898,41 @@ function drawParticles(dt, time) {
 
     p.x += p.vx * dt;
     p.y += p.vy * dt;
+
     p.rotation += p.spin * dt;
     p.life -= dt;
 
-    if (p.x < -100) p.x = innerWidth + 100;
-    if (p.x > innerWidth + 100) p.x = -100;
-    if (p.y < -100) p.y = innerHeight + 100;
-    if (p.y > innerHeight + 100) p.y = -100;
+    if (p.x < -100) {
+      p.x = innerWidth + 100;
+    }
+
+    if (p.x > innerWidth + 100) {
+      p.x = -100;
+    }
+
+    if (p.y < -100) {
+      p.y = innerHeight + 100;
+    }
+
+    if (p.y > innerHeight + 100) {
+      p.y = -100;
+    }
 
     if (p.life <= 0) {
+
       p.char = choose(characters);
       p.color = choose(colors);
       p.life = random(2, 8);
+
     }
 
     const alpha = .35 + .55 *
-      (.5 + .5 * Math.sin(time * p.pulse + p.phase));
+      (
+        .5 + .5 *
+        Math.sin(
+          time * p.pulse + p.phase
+        )
+      );
 
     ctx.save();
 
@@ -758,31 +940,53 @@ function drawParticles(dt, time) {
     ctx.rotate(p.rotation);
 
     ctx.globalAlpha = alpha;
-    ctx.font = `bold ${p.size}px Georgia`;
+
+    ctx.font =
+      `bold ${p.size}px Georgia`;
+
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+
     ctx.fillStyle = p.color;
 
     if (stage >= 2) {
+
       ctx.shadowColor = p.color;
-      ctx.shadowBlur = stage === 3 ? 18 : 8;
+
+      ctx.shadowBlur =
+        stage === 3 ? 18 : 8;
+
     }
 
-    ctx.fillText(p.char, 0, 0);
+    ctx.fillText(
+      p.char,
+      0,
+      0
+    );
+
     ctx.restore();
+
   }
+
 }
 
 function drawSparks(dt) {
 
-  for (let i = sparks.length - 1; i >= 0; i--) {
+  for (
+    let i = sparks.length - 1;
+    i >= 0;
+    i--
+  ) {
 
     const s = sparks[i];
+
     s.life -= dt;
 
     if (s.life <= 0) {
+
       sparks.splice(i, 1);
       continue;
+
     }
 
     s.x += s.vx * dt;
@@ -791,12 +995,17 @@ function drawSparks(dt) {
 
     ctx.save();
 
-    ctx.globalAlpha = Math.min(1, s.life);
+    ctx.globalAlpha = Math.min(
+      1,
+      s.life
+    );
+
     ctx.fillStyle = s.color;
     ctx.shadowColor = s.color;
     ctx.shadowBlur = 12;
 
     ctx.beginPath();
+
     ctx.arc(
       s.x,
       s.y,
@@ -806,29 +1015,43 @@ function drawSparks(dt) {
     );
 
     ctx.fill();
+
     ctx.restore();
+
   }
+
 }
 
 function drawLightning(dt) {
 
-  for (let i = bolts.length - 1; i >= 0; i--) {
+  for (
+    let i = bolts.length - 1;
+    i >= 0;
+    i--
+  ) {
 
     const bolt = bolts[i];
+
     bolt.life -= dt;
 
     if (bolt.life <= 0) {
+
       bolts.splice(i, 1);
       continue;
+
     }
 
     ctx.save();
 
-    ctx.globalAlpha = bolt.life / .35;
+    ctx.globalAlpha =
+      bolt.life / .35;
+
     ctx.strokeStyle = bolt.color;
     ctx.shadowColor = bolt.color;
     ctx.shadowBlur = 25;
-    ctx.lineWidth = stage === 3 ? 5 : 3;
+
+    ctx.lineWidth =
+      stage === 3 ? 5 : 3;
 
     ctx.beginPath();
 
@@ -837,37 +1060,61 @@ function drawLightning(dt) {
       bolt.points[0].y
     );
 
-    for (const point of bolt.points.slice(1)) {
-      ctx.lineTo(point.x, point.y);
+    for (
+      const point of bolt.points.slice(1)
+    ) {
+
+      ctx.lineTo(
+        point.x,
+        point.y
+      );
+
     }
 
     ctx.stroke();
+
     ctx.restore();
+
   }
+
 }
 
 function drawGlitches() {
 
   if (stage < 2) return;
 
-  const count = stage === 3 ? 12 : 4;
+  const count =
+    stage === 3 ? 12 : 4;
 
   ctx.save();
 
   for (let i = 0; i < count; i++) {
 
     ctx.fillStyle = choose(colors);
-    ctx.globalAlpha = stage === 3 ? .18 : .1;
+
+    ctx.globalAlpha =
+      stage === 3 ? .18 : .1;
 
     ctx.fillRect(
       random(0, innerWidth),
       random(0, innerHeight),
-      random(30, Math.max(31, innerWidth * .6)),
-      random(1, stage === 3 ? 12 : 5)
+      random(
+        30,
+        Math.max(
+          31,
+          innerWidth * .6
+        )
+      ),
+      random(
+        1,
+        stage === 3 ? 12 : 5
+      )
     );
+
   }
 
   ctx.restore();
+
 }
 
 function animate(timestamp) {
@@ -875,38 +1122,67 @@ function animate(timestamp) {
   requestAnimationFrame(animate);
 
   const dt = Math.min(
-    (timestamp - (lastFrame || timestamp)) / 1000,
+    (
+      timestamp -
+      (lastFrame || timestamp)
+    ) / 1000,
     .05
   );
 
   lastFrame = timestamp;
 
-  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  ctx.clearRect(
+    0,
+    0,
+    innerWidth,
+    innerHeight
+  );
 
   if (!stage || reduced) return;
 
-  drawParticles(dt, timestamp / 1000);
+  drawParticles(
+    dt,
+    timestamp / 1000
+  );
+
   drawSparks(dt);
   drawLightning(dt);
   drawGlitches();
 
-  const boltInterval = stage === 3
-    ? 420
-    : stage === 2 ? 1300 : 3000;
+  const boltInterval =
+    stage === 3
+      ? 420
+      : stage === 2
+        ? 1300
+        : 3000;
 
-  const burstInterval = stage === 3
-    ? 260
-    : stage === 2 ? 900 : 2200;
+  const burstInterval =
+    stage === 3
+      ? 260
+      : stage === 2
+        ? 900
+        : 2200;
 
-  if (timestamp - lastBolt > boltInterval) {
+  if (
+    timestamp - lastBolt >
+    boltInterval
+  ) {
+
     makeLightning();
     lastBolt = timestamp;
+
   }
 
-  if (timestamp - lastBurst > burstInterval) {
+  if (
+    timestamp - lastBurst >
+    burstInterval
+  ) {
+
     makeExplosion();
     lastBurst = timestamp;
+
   }
+
 }
 
 requestAnimationFrame(animate);
@@ -921,63 +1197,107 @@ function advanceChaos(level) {
     "stage3"
   );
 
-  document.body.classList.add("stage" + level);
+  document.body.classList.add(
+    "stage" + level
+  );
 
-  const target = level === 1
-    ? 120
-    : level === 2 ? 350 : 900;
+  const target =
+    level === 1
+      ? 120
+      : level === 2
+        ? 350
+        : 900;
 
-  while (particles.length < target) {
-    particles.push(createParticle(level));
+  while (
+    particles.length < target
+  ) {
+
+    particles.push(
+      createParticle(level)
+    );
+
   }
 
   for (const p of particles) {
 
-    const angle = Math.atan2(p.vy, p.vx);
+    const angle = Math.atan2(
+      p.vy,
+      p.vx
+    );
 
-    const speed = level === 3
-      ? random(120, 340)
-      : level === 2
-        ? random(60, 180)
-        : random(25, 95);
+    const speed =
+      level === 3
+        ? random(120, 340)
+        : level === 2
+          ? random(60, 180)
+          : random(25, 95);
 
     p.vx = Math.cos(angle) * speed;
     p.vy = Math.sin(angle) * speed;
 
     if (level === 3) {
+
       p.size = random(20, 85);
+
     }
+
   }
 
   if (!reduced) {
 
-    for (let i = 0; i < level * 3; i++) {
+    for (
+      let i = 0;
+      i < level * 3;
+      i++
+    ) {
+
       makeExplosion();
+
     }
 
-    for (let i = 0; i < level; i++) {
+    for (
+      let i = 0;
+      i < level;
+      i++
+    ) {
+
       makeLightning();
+
     }
+
   }
+
 }
 
 /* ======================================
-   SHOW ONLY THE CURRENT STAGE
+   SHOW ONLY CURRENT STAGE
    ====================================== */
 
 function showStage(n) {
 
   for (let i = 1; i <= 4; i++) {
+
     document.getElementById(
       "layer" + i
-    ).style.display = i === n ? "block" : "none";
+    ).style.display =
+      i === n ? "block" : "none";
+
   }
 
   for (let i = 1; i <= 3; i++) {
+
     document.getElementById(
       "grey" + i
-    ).style.display = i === n ? "block" : "none";
+    ).style.display =
+      i === n ? "block" : "none";
+
   }
+
+  document.querySelector(
+    ".grey-hint-zone"
+  ).style.display =
+    n === 4 ? "none" : "flex";
+
 }
 
 /* ======================================
@@ -988,13 +1308,15 @@ async function check(n) {
 
   if (completed.has(n)) return;
 
-  const input = document.getElementById(
-    "answer" + n
-  );
+  const input =
+    document.getElementById(
+      "answer" + n
+    );
 
-  const note = document.getElementById(
-    "note" + n
-  );
+  const note =
+    document.getElementById(
+      "note" + n
+    );
 
   const guess = input.value
     .trim()
@@ -1006,19 +1328,28 @@ async function check(n) {
   let correct = false;
 
   try {
-    correct = await validAnswer(n, guess);
+
+    correct = await validAnswer(
+      n,
+      guess
+    );
+
   } catch (error) {
+
     note.textContent =
       "Verification unavailable. Use the published HTTPS site.";
 
     input.disabled = false;
     return;
+
   }
 
   if (!correct) {
+
     note.textContent = "Try again.";
     input.disabled = false;
     return;
+
   }
 
   completed.add(n);
@@ -1032,58 +1363,81 @@ async function check(n) {
   advanceChaos(n);
 
   if (n < 3) {
+
     showStage(n + 1);
+
   } else {
+
     showStage(4);
+
   }
+
 }
+
+/* ======================================
+   FORM HANDLERS
+   ====================================== */
 
 for (let n = 1; n <= 3; n++) {
 
   document.getElementById(
     "form" + n
-  ).addEventListener("submit", event => {
-    event.preventDefault();
-    check(n);
-  });
+  ).addEventListener(
+    "submit",
+    event => {
+
+      event.preventDefault();
+      check(n);
+
+    }
+  );
+
 }
 
 /* ======================================
-   REDUCE EFFECTS
+   REDUCED EFFECTS
    ====================================== */
 
 function updateEffectsButton() {
 
-  toggle.textContent = reduced
-    ? "Enable effects"
-    : "Reduce effects";
+  toggle.textContent =
+    reduced
+      ? "Enable effects"
+      : "Reduce effects";
 
   document.body.classList.toggle(
     "calm",
     reduced
   );
+
 }
 
-toggle.addEventListener("click", () => {
-  reduced = !reduced;
-  updateEffectsButton();
-});
+toggle.addEventListener(
+  "click",
+  () => {
+
+    reduced = !reduced;
+    updateEffectsButton();
+
+  }
+);
 
 preference.addEventListener?.(
   "change",
   event => {
+
     reduced = event.matches;
     updateEffectsButton();
+
   }
 );
 
 updateEffectsButton();
 
-/* START THE PUZZLE */
+/* START STAGE 1 */
 
 showStage(1);
 
 </script>
-
 </body>
 </html>
