@@ -30,7 +30,7 @@ html, body {
   pointer-events: none;
 }
 
-/* Solid black area protecting the puzzle and gray hints */
+/* Protected black area for puzzle and gray hints */
 
 .puzzle-container {
   position: relative;
@@ -97,7 +97,7 @@ summary {
   min-height: 22px;
 }
 
-/* Rotated puzzle text */
+/* Distorted puzzle text */
 
 #layer1 h2,
 #layer1 .puzzle-text {
@@ -114,7 +114,7 @@ summary {
   transform: scaleX(-1);
 }
 
-/* Gray hints: separate space, no overlap */
+/* Protected gray hint area */
 
 .grey-hint-zone {
   display: flex;
@@ -190,7 +190,7 @@ body.stage3 .layer {
   75% { translate: 7px 9px; }
 }
 
-/* Empty final screen */
+/* Final screen: no words */
 
 #layer4 {
   display: none;
@@ -205,6 +205,8 @@ body.stage3 .layer {
 body.finished .puzzle-container {
   display: none;
 }
+
+/* Effects button */
 
 #effects-toggle {
   position: fixed;
@@ -312,11 +314,14 @@ body.calm .layer {
     until you get the opposite of nothing.
   </p>
 
+  <!-- DESMOS LINK WITH REQUESTED NAME -->
+
   <p class="puzzle-text">
     <a
       href="https://www.desmos.com/calculator/h23hpfxeri"
       target="_blank"
-      rel="noopener">
+      rel="noopener"
+      title="no-sin&amp;cosine=no-chaos">
       no-sin&amp;cosine=no-chaos
     </a>
   </p>
@@ -403,7 +408,7 @@ body.calm .layer {
 
 </section>
 
-<!-- GRAY HINTS: PROTECTED FROM OVERLAP -->
+<!-- GRAY HINTS -->
 
 <div class="grey-hint-zone" id="grey-zone">
 
@@ -426,7 +431,7 @@ body.calm .layer {
 </div>
 </main>
 
-<!-- FINAL SCREEN: NO WORDS -->
+<!-- FINAL SCREEN -->
 
 <section id="layer4"></section>
 
@@ -434,7 +439,7 @@ body.calm .layer {
 
 /* Stop cheating- It’s UChicago, challenge yourself! */
 
-/* Answers are checked using SHA-256 hashes. */
+/* SHA-256 answer verification */
 
 const digests = {
   firstSorted:
@@ -850,7 +855,7 @@ function advanceChaos(level) {
   }
 }
 
-/* SHOW ONLY THE CURRENT STAGE */
+/* SHOW CURRENT STAGE */
 
 function showStage(n) {
   for (let i = 1; i <= 3; i++) {
