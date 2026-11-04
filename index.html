@@ -30,7 +30,7 @@ html, body {
   pointer-events: none;
 }
 
-/* Protected black area for puzzle and gray hints */
+/* Protected black area for puzzle and hints */
 
 .puzzle-container {
   position: relative;
@@ -114,7 +114,7 @@ summary {
   transform: scaleX(-1);
 }
 
-/* Protected gray hint area */
+/* Faint hints in a protected, centered area */
 
 .grey-hint-zone {
   display: flex;
@@ -147,11 +147,33 @@ summary {
 }
 
 #grey2 {
-  transform: translateX(30px);
+  transform: translateX(20px);
 }
 
 #grey3 {
   transform: translateX(12px);
+}
+
+/* Stage 2 has two separate faint hints */
+
+.stage2-grey-hints {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  width: 100%;
+}
+
+.stage2-grey-hints .grey-hint {
+  display: block;
+}
+
+/* New hint closer to the exact center */
+
+#grey2-extra {
+  transform: translateX(-12px);
+  color: #303030;
 }
 
 /* Increasing chaos */
@@ -190,7 +212,7 @@ body.stage3 .layer {
   75% { translate: 7px 9px; }
 }
 
-/* Final screen: no words */
+/* Final screen: no text */
 
 #layer4 {
   display: none;
@@ -236,6 +258,7 @@ body.calm .layer {
 
   #grey1,
   #grey2,
+  #grey2-extra,
   #grey3 {
     transform: none;
   }
@@ -313,8 +336,6 @@ body.calm .layer {
     Lower the sine and cosine coefficients
     until you get the opposite of nothing.
   </p>
-
-  <!-- DESMOS LINK WITH REQUESTED NAME -->
 
   <p class="puzzle-text">
     <a
@@ -408,17 +429,31 @@ body.calm .layer {
 
 </section>
 
-<!-- GRAY HINTS -->
+<!-- FAINT GRAY HINTS -->
 
 <div class="grey-hint-zone" id="grey-zone">
+
+  <!-- Stage 1 -->
 
   <div class="grey-hint" id="grey1">
     typos-are-rewarded
   </div>
 
-  <div class="grey-hint" id="grey2">
-    do you see a number?
+  <!-- Stage 2: two hints -->
+
+  <div class="stage2-grey-hints" id="grey2-group">
+
+    <div class="grey-hint" id="grey2">
+      do you see a number?
+    </div>
+
+    <div class="grey-hint" id="grey2-extra">
+      check the file name flipped back to normal
+    </div>
+
   </div>
+
+  <!-- Stage 3 -->
 
   <div class="grey-hint" id="grey3">
     In the first sheet, you rearranged the data.
@@ -855,16 +890,22 @@ function advanceChaos(level) {
   }
 }
 
-/* SHOW CURRENT STAGE */
+/* SHOW CURRENT STAGE AND HINTS */
 
 function showStage(n) {
   for (let i = 1; i <= 3; i++) {
     document.getElementById("layer" + i).style.display =
       i === n ? "block" : "none";
-
-    document.getElementById("grey" + i).style.display =
-      i === n ? "block" : "none";
   }
+
+  document.getElementById("grey1").style.display =
+    n === 1 ? "block" : "none";
+
+  document.getElementById("grey2-group").style.display =
+    n === 2 ? "flex" : "none";
+
+  document.getElementById("grey3").style.display =
+    n === 3 ? "block" : "none";
 
   document.getElementById("grey-zone").style.display =
     n === 4 ? "none" : "flex";
