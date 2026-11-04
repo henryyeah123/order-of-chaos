@@ -8,9 +8,10 @@
 
 <style>
   html, body {
-    overflow-x: hidden;
     background: black;
     color: white;
+    overflow-x: hidden;
+    min-height: 100%;
   }
 
   body {
@@ -23,10 +24,9 @@
   }
 
   a { color: white; }
-
   label { display: inline-block; }
 
-  /* Original transformations */
+  /* Original puzzle text transformations */
   #layer1 h2, #layer1 p {
     transform: scaleX(-1);
   }
@@ -41,16 +41,27 @@
 
   .layer {
     display: none;
+    position: relative;
     margin-top: 40px;
+    z-index: 5;
   }
 
   input, button {
     font-size: 16px;
-    padding: 4px 8px;
+    padding: 6px 9px;
     margin-top: 6px;
   }
 
-  /* Clickable hints */
+  input {
+    max-width: 55%;
+  }
+
+  form {
+    position: relative;
+    z-index: 20;
+  }
+
+  /* ORIGINAL CLICKABLE HINTS */
   details {
     margin: 12px auto;
     max-width: 400px;
@@ -67,102 +78,163 @@
     padding: 8px;
   }
 
-  /* Stage 1: slight instability */
-  body.stage-one #layer1 {
-    animation: subtleShake 3s infinite;
+  /* Background letter field */
+  #letter-field {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
   }
 
-  @keyframes subtleShake {
-    0%, 90%, 100% {
-      translate: 0 0;
+  .chaos-letter {
+    position: absolute;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation:
+      letterMotion var(--speed) ease-in-out infinite alternate,
+      letterAppear var(--pulse) ease-in-out infinite;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes letterMotion {
+    0% {
+      transform:
+        translate(-35px, 25px)
+        rotate(-35deg)
+        scale(0.7);
     }
-    92% { translate: 2px 0; }
-    95% { translate: -2px 1px; }
+    35% {
+      transform:
+        translate(35px, -35px)
+        rotate(65deg)
+        scale(1.3);
+    }
+    70% {
+      transform:
+        translate(-25px, -55px)
+        rotate(-70deg)
+        scale(0.9);
+    }
+    100% {
+      transform:
+        translate(55px, 45px)
+        rotate(120deg)
+        scale(1.5);
+    }
   }
 
-  /* Stage 2: stronger disturbances */
+  @keyframes letterAppear {
+    0%, 100% { opacity: 0.15; }
+    40% { opacity: 0.95; }
+    65% { opacity: 0.45; }
+  }
+
+  /* AFTER STAGE 1 */
+  body.stage-one #layer1 {
+    animation: shakeOne 1.1s infinite;
+  }
+
+  @keyframes shakeOne {
+    0%, 100% { translate: 0 0; }
+    25% { translate: 4px -3px; }
+    50% { translate: -5px 3px; }
+    75% { translate: 3px 4px; }
+  }
+
+  /* AFTER STAGE 2 */
   body.stage-two #layer1,
-  body.stage-two #layer2 {
-    animation: strongerShake 1.2s infinite;
+  body.stage-two #layer2,
+  body.stage-two #layer3 {
+    animation: shakeTwo 0.45s infinite;
   }
 
   body.stage-two {
-    text-shadow: 1px 0 red, -1px 0 cyan;
+    text-shadow:
+      2px 0 #ff3366,
+      -2px 0 #00ffff;
   }
 
-  @keyframes strongerShake {
+  @keyframes shakeTwo {
     0%, 100% { translate: 0 0; }
-    25% { translate: 3px -2px; }
-    50% { translate: -3px 2px; }
-    75% { translate: 2px 3px; }
+    20% { translate: 7px -5px; }
+    40% { translate: -8px 5px; }
+    60% { translate: 6px 8px; }
+    80% { translate: -6px -7px; }
   }
 
-  /* Final stage: no box around Chaos */
+  /* AFTER STAGE 3 */
+  body.stage-three #layer1,
+  body.stage-three #layer2,
+  body.stage-three #layer3 {
+    animation: shakeThree 0.25s infinite;
+  }
+
+  @keyframes shakeThree {
+    0%, 100% { translate: 0 0; }
+    25% { translate: 12px -8px; }
+    50% { translate: -13px 10px; }
+    75% { translate: 9px 12px; }
+  }
+
+  body.stage-three .chaos-letter {
+    text-shadow:
+      2px 2px #ff00ff,
+      -2px -2px #00ffff;
+  }
+
+  /* FINAL SCREEN - NO BOX */
   #layer4 {
     position: fixed;
     inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
     margin: 0;
     padding: 0;
     border: none;
+    outline: none;
     background: transparent;
     box-shadow: none;
-    pointer-events: none;
     z-index: 100;
+    pointer-events: none;
+    align-items: center;
+    justify-content: center;
   }
 
   #layer4 h2 {
-    font-size: clamp(65px, 13vw, 160px);
+    font-size: clamp(70px, 15vw, 190px);
+    font-weight: bold;
     margin: 0;
+    padding: 0;
+    color: white;
     border: none;
-    background: none;
+    outline: none;
+    background: transparent;
+    box-shadow: none;
     text-shadow:
-      5px 0 red,
-      -5px 0 cyan,
-      0 5px blue;
-    animation:
-      finalShake 0.12s infinite,
-      flicker 0.8s infinite;
+      9px 0 red,
+      -9px 0 cyan,
+      5px 7px blue,
+      -5px -7px magenta;
+    animation: finalChaos 0.16s infinite;
   }
 
-  @keyframes finalShake {
+  @keyframes finalChaos {
     0% {
-      transform: translate(4px, -3px) rotate(-3deg);
+      transform: translate(8px, -6px) rotate(-4deg);
+    }
+    25% {
+      transform: translate(-10px, 7px) rotate(3deg);
     }
     50% {
-      transform: translate(-5px, 4px) rotate(3deg);
+      transform: translate(7px, 10px) rotate(-3deg);
+    }
+    75% {
+      transform: translate(-8px, -9px) rotate(4deg);
     }
     100% {
-      transform: translate(3px, -4px) rotate(-2deg);
-    }
-  }
-
-  @keyframes flicker {
-    0%, 80%, 100% { opacity: 1; }
-    85% { opacity: 0.5; }
-    90% { opacity: 0.9; }
-  }
-
-  /* Floating fragments on final screen */
-  .fragment {
-    position: fixed;
-    pointer-events: none;
-    z-index: 90;
-    font-size: 18px;
-    color: white;
-    animation: fragmentMove 3s infinite alternate;
-  }
-
-  @keyframes fragmentMove {
-    from {
-      transform: translate(0, 0) rotate(0deg);
-      opacity: 0.4;
-    }
-    to {
-      transform: translate(40px, -50px) rotate(180deg);
-      opacity: 1;
+      transform: translate(8px, -6px) rotate(-4deg);
     }
   }
 
@@ -171,11 +243,14 @@
       animation: none !important;
       transition: none !important;
     }
+    .chaos-letter { opacity: 0.7; }
   }
 </style>
 </head>
 
 <body>
+
+<div id="letter-field" aria-hidden="true"></div>
 
 <!-- STAGE 1 -->
 <div class="layer" id="layer1">
@@ -184,7 +259,7 @@
   <p>
     <a href="Face-Portrait_26-10_Scrambled.xlsx"
        download="whose-face-rearrange-the-name.xlsx">
-       portrait.xlsx
+      portrait.xlsx
     </a>
   </p>
 
@@ -196,33 +271,30 @@
 
   <details>
     <summary>Hint 1</summary>
-    Look closely at the Excel portrait.
-    The identity is part of the puzzle.
+    The answer is hidden in the Excel portrait.
   </details>
 
   <details>
     <summary>Hint 2</summary>
-    Find the person's name, then rearrange
-    its letters to create a different ordering.
+    Rearrange the letters of the person's name.
   </details>
 
-  <p id="note1" aria-live="polite"></p>
+  <p id="note1"></p>
 </div>
-
 
 <!-- STAGE 2 -->
 <div class="layer" id="layer2">
   <h2>2.</h2>
 
   <p>
-    Order is hidden beneath the chaos.
-    Simplify the graph to reveal what remains.
+    Lower the sine and cosine coefficients
+    until you get the opposite of nothing.
   </p>
 
   <p>
     <a href="https://www.desmos.com/calculator/h23hpfxeri"
        target="_blank" rel="noopener">
-       graph
+      graph
     </a>
   </p>
 
@@ -234,35 +306,34 @@
 
   <details>
     <summary>Hint 1</summary>
-    Focus on the coefficients of the
-    sine and cosine terms.
+    Focus on the sine and cosine terms.
   </details>
 
   <details>
     <summary>Hint 2</summary>
     Set both coefficients to zero.
     Look at the resulting symbol.
-    Think about the opposite of nothing.
   </details>
 
-  <p id="note2" aria-live="polite"></p>
+  <p id="note2"></p>
 </div>
-
 
 <!-- STAGE 3 -->
 <div class="layer" id="layer3">
   <h2>3.</h2>
 
   <p>
-    Some cells look identical, but they aren't.
-    Reveal the hidden design by changing
-    how the spreadsheet displays its values.
+    Some of these cells are 0. Some are -0.
+    A new design appears only under certain
+    conditions. Format a new condition,
+    starting from A1, and color what is
+    less than nothing.
   </p>
 
   <p>
     <a href="Inter_project.2.xlsx"
        download="spiral-highlight-below-zero.xlsx">
-       spiral.xlsx
+      spiral.xlsx
     </a>
   </p>
 
@@ -275,80 +346,157 @@
   <details>
     <summary>Hint 1</summary>
     Use Excel's Conditional Formatting tool.
-    Not every zero is what it seems.
   </details>
 
   <details>
     <summary>Hint 2</summary>
-    Starting from A1, create a formatting
-    condition for values less than zero.
-    Color the matching cells.
+    Highlight values less than zero,
+    starting from cell A1.
   </details>
 
-  <p id="note3" aria-live="polite"></p>
+  <p id="note3"></p>
 </div>
-
 
 <!-- FINAL SCREEN -->
 <div class="layer" id="layer4">
-  <h2>Chaos.</h2>
+  <h2>CHAOS</h2>
 </div>
 
-
 <script>
-  // Hashes obscure the accepted answers.
-  // This is not secure server-side validation.
-
-  const acceptedHashes = {
-    2: new Set([
-      "ed79f26d03f412bde3db206601a698e0bb451bea9e3cc25289636ac17ea74b0a",
-      "20e15c81faba74d8b574804fa50d6235fbd881084816f52f687121d48b6c4048",
-      "71a5a6af68434a598e6def21898286820f850f24ceec24f77e4ee8337caf1372",
-      "98f5f963c6adc5e4936fd7921496195d04ca905aedce43636f0629bf73542697",
-      "de66f767844aa1854f51cd3e626af5a23244aec1dcf85525697e1b87c6b9051c"
-    ]),
-    3: new Set([
-      "5d5bddb577102d0a960bcf6fea9050c10fe5e9feddcb5c2170ccab872db9ee87",
-      "27489638f8b69622d849000eb53be4d66b36245dcc2bf2cc7f1789d9fdbedaa0",
-      "e2f1887551af00a3191dff35c1657ce0104bba60a9452c077ac6430131d842c2",
-      "389e8ecbfcc07535c5b0637e98fdf9fa0c39bb4278e7fe8fa38696cd75b00299",
-      "7ab157c86525f2c74588c11a611a6db180b55931f5211a63fa771e26969330fa",
-      "47e9ec33822978eac12d6f9ba4471e9cbb2b8c1b47bfc708ca9ea9b1c42867c7"
-    ])
+  /* Original answer checking */
+  const answers = {
+    2: [
+      "-0", "negative zero", "negative 0",
+      "minus zero", "minus 0"
+    ],
+    3: [
+      "chaos", "chaos star", "chaos symbol",
+      "symbol of chaos", "star of chaos",
+      "arrows of chaos"
+    ]
   };
 
-  const completed = new Set();
-
-  async function hashText(value) {
-    const bytes = new TextEncoder().encode(value);
-    const digest = await crypto.subtle.digest("SHA-256", bytes);
-
-    return Array.from(new Uint8Array(digest))
-      .map(b => b.toString(16).padStart(2, "0"))
-      .join("");
+  function isScrambledHenry(guess) {
+    const sorted = guess.split("").sort().join("");
+    return sorted === "ehnry" && guess !== "henry";
   }
 
-  async function isCorrect(n, guess) {
-    if (n === 1) {
-      // Require a rearrangement, not the original name.
-      const sorted = [...guess].sort().join("");
-      const sortedHash = await hashText(sorted);
-      const guessHash = await hashText(guess);
+  const completed = new Set();
+  const field = document.getElementById("letter-field");
 
-      return (
-        sortedHash ===
-        "1dad59225a424bf4506895d97c2f29b86ef95c9390816d49141b6a2ea33cbfe3" &&
-        guessHash !==
-        "927a3aed189d610b2e151c4208913b3ed0cb38f6be613756819b1513c8924d7f"
+  const alphabet =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!@#$%&";
+
+  const colors = [
+    "#ff3355", "#00ffff", "#ffff00",
+    "#ff00ff", "#00ff66", "#ffffff",
+    "#ff8800", "#6688ff"
+  ];
+
+  let letterCount = 0;
+  let colorTimer = null;
+
+  function random(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  /* Add letters progressively */
+  function addLetters(target, stage) {
+    const fragment = document.createDocumentFragment();
+
+    while (letterCount < target) {
+      const letter = document.createElement("span");
+      letter.className = "chaos-letter";
+
+      letter.textContent =
+        alphabet[Math.floor(Math.random() * alphabet.length)];
+
+      letter.style.left = random(0, 100) + "%";
+      letter.style.top = random(0, 100) + "%";
+
+      const size = stage === 3
+        ? random(22, 85)
+        : stage === 2
+          ? random(18, 52)
+          : random(16, 38);
+
+      letter.style.fontSize = size + "px";
+
+      letter.style.color =
+        colors[Math.floor(Math.random() * colors.length)];
+
+      letter.style.setProperty(
+        "--speed",
+        random(
+          stage === 3 ? 0.8 : 1.5,
+          stage === 3 ? 2.5 : 4
+        ) + "s"
       );
+
+      letter.style.setProperty(
+        "--pulse",
+        random(1.2, 3) + "s"
+      );
+
+      letter.style.setProperty(
+        "--delay",
+        random(-4, 0) + "s"
+      );
+
+      fragment.appendChild(letter);
+      letterCount++;
     }
 
-    const hash = await hashText(guess);
-    return acceptedHashes[n].has(hash);
+    field.appendChild(fragment);
   }
 
-  // Scatter page elements during the final transition.
-  function chaos() {
+  /* Shift colors without full-screen flashes */
+  function startColorChanges(interval) {
+    if (colorTimer) clearInterval(colorTimer);
+
+    colorTimer = setInterval(() => {
+      const letters = field.children;
+      if (!letters.length) return;
+
+      // Change a portion of the letters each cycle.
+      const changes = Math.min(
+        letters.length,
+        Math.ceil(letters.length * 0.2)
+      );
+
+      for (let i = 0; i < changes; i++) {
+        const index = Math.floor(
+          Math.random() * letters.length
+        );
+
+        letters[index].style.color =
+          colors[Math.floor(Math.random() * colors.length)];
+      }
+    }, interval);
+  }
+
+  function startStageOne() {
+    document.body.classList.add("stage-one");
+    addLetters(55, 1);
+    startColorChanges(1200);
+  }
+
+  function startStageTwo() {
+    document.body.classList.remove("stage-one");
+    document.body.classList.add("stage-two");
+
+    addLetters(180, 2);
+    startColorChanges(650);
+  }
+
+  function startStageThree() {
+    document.body.classList.remove("stage-two");
+    document.body.classList.add("stage-three");
+
+    addLetters(650, 3);
+    startColorChanges(350);
+
+    /* Scatter original page content */
     const pieces = document.querySelectorAll(
       "#layer1 h2, #layer1 p, #layer1 form, " +
       "#layer2 h2, #layer2 p, #layer2 form, " +
@@ -357,11 +505,17 @@
     );
 
     pieces.forEach(piece => {
-      const x = (Math.random() - 0.5) *
-        window.innerWidth * 1.5;
-      const y = (Math.random() - 0.5) *
-        window.innerHeight * 1.5;
-      const turn = (Math.random() - 0.5) * 1080;
+      const x = random(
+        -window.innerWidth,
+        window.innerWidth
+      );
+
+      const y = random(
+        -window.innerHeight,
+        window.innerHeight
+      );
+
+      const turn = random(-720, 720);
 
       piece.style.transition =
         "transform 3s ease-out, opacity 3s";
@@ -369,91 +523,68 @@
       piece.style.transform =
         `translate(${x}px, ${y}px) rotate(${turn}deg)`;
 
-      piece.style.opacity = "0.25";
+      piece.style.opacity = "0.3";
     });
-
-    // Create random floating visual fragments.
-    const symbols = [
-      "0", "-0", "?", "!", "*", "+", "×", "↗", "↙"
-    ];
-
-    for (let i = 0; i < 35; i++) {
-      const fragment = document.createElement("span");
-      fragment.className = "fragment";
-
-      fragment.textContent =
-        symbols[Math.floor(Math.random() * symbols.length)];
-
-      fragment.style.left = Math.random() * 100 + "vw";
-      fragment.style.top = Math.random() * 100 + "vh";
-      fragment.style.fontSize =
-        (14 + Math.random() * 45) + "px";
-      fragment.style.animationDelay =
-        (-Math.random() * 3) + "s";
-
-      document.body.appendChild(fragment);
-    }
 
     document.getElementById("layer4").style.display = "flex";
   }
 
-  async function check(n) {
+  function check(n) {
     if (completed.has(n)) return;
 
     const input = document.getElementById("answer" + n);
     const note = document.getElementById("note" + n);
-    const form = document.getElementById("form" + n);
 
     const guess = input.value
       .trim()
       .toLowerCase()
-      .replace(/\u2212/g, "-")
-      .replace(/\s+/g, " ");
+      .replace(/\u2212/g, "-");
 
-    // Prevent duplicate submissions during validation.
-    if (form.dataset.checking === "true") return;
-    form.dataset.checking = "true";
+    if (n === 1 && guess === "henry") {
+      note.textContent = "Not like that.";
+      return;
+    }
 
-    try {
-      const right = await isCorrect(n, guess);
+    const right = n === 1
+      ? isScrambledHenry(guess)
+      : answers[n].includes(guess);
 
-      if (!right) {
-        note.textContent = "Try again.";
-        return;
-      }
+    if (!right) {
+      note.textContent = "Try again.";
+      return;
+    }
 
-      completed.add(n);
-      note.textContent = "Correct.";
-      input.disabled = true;
-      form.querySelector("button").disabled = true;
+    completed.add(n);
+    note.textContent = "Correct.";
 
-      const next =
-        document.getElementById("layer" + (n + 1));
+    input.disabled = true;
+    document.querySelector(
+      "#form" + n + " button"
+    ).disabled = true;
 
-      if (n === 1) {
-        document.body.classList.add("stage-one");
-      }
+    const next = document.getElementById(
+      "layer" + (n + 1)
+    );
 
-      if (n === 2) {
-        document.body.classList.remove("stage-one");
-        document.body.classList.add("stage-two");
-      }
+    if (n === 1) {
+      next.style.display = "block";
+      startStageOne();
+    }
 
-      if (n === 3) {
-        chaos();
-      } else {
-        next.style.display = "block";
-        next.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }
-    } catch (error) {
-      note.textContent =
-        "Could not check the answer. Reload and try again.";
-      console.error(error);
-    } finally {
-      form.dataset.checking = "false";
+    if (n === 2) {
+      next.style.display = "block";
+      startStageTwo();
+    }
+
+    if (n === 3) {
+      startStageThree();
+    }
+
+    if (n < 3) {
+      next.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
     }
   }
 
